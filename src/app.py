@@ -1,9 +1,26 @@
-from flask import Flask  # Necesario para comenzar el proyecto.
+from flask import Flask, jsonify, request  # Necesario para comenzar el proyecto.
+
 app = Flask(__name__)
+
+todos = [     
+    { "label": "My first task", "done": False },
+    { "label": "My second task", "done": False } 
+    ]
 
 @app.route('/todos', methods=['GET'])
 def hello_world():
-    return '<h1>Hello!</h1>'
+    return jsonify(todos)
+
+@app.route('/todos', methods=['POST'])
+def add_new_todo():
+    request_body = request.json
+    todos.append(request_body)
+    return jsonify(todos)
+
+@app.route('/todos/<int:position>', methods=['DELETE'])
+def delete_todo(position):
+    todos.pop(position)
+    return jsonify(todos)
 
 # Añadir al final del proyecto
 if __name__ == '__main__':
